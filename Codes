@@ -1,0 +1,765 @@
+###### Trichoderma reesei RUT-C30
+############################################################################################################################################################################################################################
+setwd(dir='raw_data/for_quantification_based_analyses/Reads/CHURP_reads_QCd/re_analyses')
+set.seed(1234567)
+library(ggplot2)
+library(tidyverse)
+library(stringr)
+library(patchwork)
+library(ggtext)
+############################################################################################################################################################################################################################
+rld <- read.csv('normalized_transformed_counts/rld_blind_false.csv')
+df <- read.csv('GHs/Glucans/deg_hmg_glucans_final.csv')
+rld1 <- rld %>%
+filter(rld$GeneID %in% df$GeneID)
+head(rld1)
+write.csv(rld1, file="GHs/Glucans/rld_glucan_for_figure.csv")
+rld1 <- read.csv('GHs/Glucans/rld_glucan_for_figure.csv')
+rld1 <- rld1 %>%
+pivot_longer(TRG1:TrHM3, names_to="Samples", values_to="rlog") %>%
+mutate(Substrate = case_when(Samples %in%  c("TRG1", "TRG2", "TRG3") ~ "Glucose", Samples %in% c("LM1Tr","LM2Tr","LM3Tr") ~ "Low melanin necromass", Samples %in% c("TrHM1","TrHM2","TrHM3") ~"High melanin necromass"))
+head(rld1)
+rld1$Substrate <- factor(rld1$Substrate,levels=c("Glucose", "Low melanin necromass", "High melanin necromass")))
+rld1$Substrate <- factor(rld1$Substrate,levels=c("Glucose", "Low melanin necromass", "High melanin necromass"))
+############################################################################################################################################################################################################################
+p <- ggplot(rld1, aes(Substrate, rlog, fill=Substrate))+
+geom_boxplot(width=0.5)+
+geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
+facet_wrap(~GeneID, scale="free_y")+
+theme_classic(base_size=12)+
+labs(x="", y="regularized log expression")+
+theme(legend.position='top')+
+theme(axis.text.x=element_blank())+
+theme(axis.ticks.x=element_blank())
+p
+############################################################################################################################################################################################################################
+p1 <- p +
+theme(strip.background=element_rect(color='black', fill="GeneID")
+)
+p1
+p1 <- p +
+theme(strip.background=element_rect(color='black', fill=rld1$GeneID)
+)
+p1
+p
+ggsave(p, file='Figures_for_T_reesei_manuscript/glucan_main_figure.png', width=6.5, height=5.5)
+ggsave(p, file='Figures_for_T_reesei_manuscript/glucan_main_figure.pdf', width=6.5, height=5.5)
+ggsave(p, file='Figures_for_T_reesei_manuscript/glucan_main_figure.tiff', width=6.5, height=5.5)
+ggsave(p, file='Figures_for_T_reesei_manuscript/glucan_main_figure.eps', width=6.5, height=5.5)
+############################################################################################################################################################################################################################
+rld_64 <- read.csv('GHs/Glucans/rld_GH64.csv')
+rld64_1 <- rld64 %>%
+pivot_longer(TRG1:TrHM3, names_to="Samples", values_to="rlog") %>%
+mutate(Substrate = case_when(Samples %in%  c("TRG1", "TRG2", "TRG3") ~ "Glucose", Samples %in% c("LM1Tr","LM2Tr","LM3Tr") ~ "Low melanin necromass", Samples %in% c("TrHM1","TrHM2","TrHM3") ~"High melanin necromass"))
+############################################################################################################################################################################################################################
+rld64 <- read.csv('GHs/Glucans/rld_GH64.csv')
+rld64_1 <- rld64 %>%
+pivot_longer(TRG1:TrHM3, names_to="Samples", values_to="rlog") %>%
+mutate(Substrate = case_when(Samples %in%  c("TRG1", "TRG2", "TRG3") ~ "Glucose", Samples %in% c("LM1Tr","LM2Tr","LM3Tr") ~ "Low melanin necromass", Samples %in% c("TrHM1","TrHM2","TrHM3") ~"High melanin necromass"))
+rld64_1$Substrate <- factor(rld64_1$Substrate,levels=c("Glucose", "Low melanin necromass", "High melanin necromass"))
+############################################################################################################################################################################################################################
+p64 <- ggplot(rld64_1, aes(Substrate, rlog, fill=Substrate))+
+geom_boxplot(width=0.5)+
+geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
+facet_wrap(~GeneID, scale="free_y")+
+theme_classic(base_size=12)+
+labs(x="", y="regularized log expression")+
+theme(legend.position='top')+
+theme(axis.text.x=element_blank())+
+theme(axis.ticks.x=element_blank())
+p64
+############################################################################################################################################################################################################################
+rld_71 <- read.csv('GHs/Glucans/rld_GH71.csv')
+rld71_1 <- rld_71 %>%
+pivot_longer(TRG1:TrHM3, names_to="Samples", values_to="rlog") %>%
+mutate(Substrate = case_when(Samples %in%  c("TRG1", "TRG2", "TRG3") ~ "Glucose", Samples %in% c("LM1Tr","LM2Tr","LM3Tr") ~ "Low melanin necromass", Samples %in% c("TrHM1","TrHM2","TrHM3") ~"High melanin necromass"))
+rld71_1$Substrate <- factor(rld71_1$Substrate,levels=c("Glucose", "Low melanin necromass", "High melanin necromass"))
+p71 <- ggplot(rld71_1, aes(Substrate, rlog, fill=Substrate))+
+geom_boxplot(width=0.5)+
+geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
+facet_wrap(~GeneID, scale="free_y")+
+theme_classic(base_size=12)+
+labs(x="", y="regularized log expression")+
+theme(legend.position='top')+
+theme(axis.text.x=element_blank())+
+theme(axis.ticks.x=element_blank())
+p71
+############################################################################################################################################################################################################################
+rld_55 <- read.csv('GHs/Glucans/rld_GH55.csv')
+rld55_1 <- rld_55 %>%
+pivot_longer(TRG1:TrHM3, names_to="Samples", values_to="rlog") %>%
+mutate(Substrate = case_when(Samples %in%  c("TRG1", "TRG2", "TRG3") ~ "Glucose", Samples %in% c("LM1Tr","LM2Tr","LM3Tr") ~ "Low melanin necromass", Samples %in% c("TrHM1","TrHM2","TrHM3") ~"High melanin necromass"))
+rld55_1$Substrate <- factor(rld55_1$Substrate,levels=c("Glucose", "Low melanin necromass", "High melanin necromass"))
+p55 <- ggplot(rld71_1, aes(Substrate, rlog, fill=Substrate))+
+geom_boxplot(width=0.5)+
+geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
+facet_wrap(~GeneID, scale="free_y")+
+theme_classic(base_size=12)+
+labs(x="", y="regularized log expression")+
+theme(legend.position='top')+
+theme(axis.text.x=element_blank())+
+theme(axis.ticks.x=element_blank())
+p71 <- ggplot(rld71_1, aes(Substrate, rlog, fill=Substrate))+
+geom_boxplot(width=0.5)+
+geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
+facet_wrap(~GeneID, scale="free_y")+
+theme_classic(base_size=12)+
+labs(x="", y="regularized log expression")+
+theme(legend.position='top')+
+theme(axis.text.x=element_blank())+
+theme(axis.ticks.x=element_blank())
+p55 <- ggplot(rld55_1, aes(Substrate, rlog, fill=Substrate))+
+geom_boxplot(width=0.5)+
+geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
+facet_wrap(~GeneID, scale="free_y")+
+theme_classic(base_size=12)+
+labs(x="", y="regularized log expression")+
+theme(legend.position='top')+
+theme(axis.text.x=element_blank())+
+theme(axis.ticks.x=element_blank())
+p55
+fig <- wrap_plots(p64, p55, p71)
+fig
+fig <- wrap_plots(p64, p55, p71) +
+plot_layout(guides='collect') & theme(legend.spacing.x=unit(0, 'cm'),legend.position='bottom',legend.text=element_text(size=7), legend.title=element_text(size=7, face='bold'), legend.background=element_rect(linetype='solid', linewidth=0.5, color='black'))
+
+fig
+fig1 <- (p55 +p64)/(p71)
+fig1
+fig1 <- (p55 |p64)/(p71)
+fig1
+fig1 <- (p55 +p64)/(p71)
+fig1
+fig1 <- (p55 +p64)/(p71) +
+plot_layout(guides='collect') & theme(legend.spacing.x=unit(0, 'cm'),legend.position='bottom',legend.text=element_text(size=7), legend.title=element_text(size=7, face='bold'), legend.background=element_rect(linetype='solid', linewidth=0.5, color='black'))
+
+fig1
+fig1 <- (p55 +p64)/(p71) +
+plot_layout(guides='collect') & theme(legend.spacing.x=unit(0, 'cm'),legend.position='top',legend.text=element_text(size=7), legend.title=element_text(size=7, face='bold')))
+
+fig1 <- (p55 +p64)/(p71) +
+plot_layout(guides='collect') & theme(legend.spacing.x=unit(0, 'cm'),legend.position='top',legend.text=element_text(size=7), legend.title=element_text(size=7, face='bold'))
+
+fig1
+fig1 <- (p55 /p64)/(p71) +
+plot_layout(guides='collect') & theme(legend.spacing.x=unit(0, 'cm'),legend.position='top',legend.text=element_text(size=7), legend.title=element_text(size=7, face='bold'))
+
+fig1
+fig1
+fig1 <- (p55 +p64)/(p71) +
+plot_layout(guides='collect') & theme(legend.spacing.x=unit(0, 'cm'),legend.position='top',legend.text=element_text(size=7), legend.title=element_text(size=7, face='bold'))
+
+fig1
+fig1 <- (p64 |(p55/(p71) +
+plot_layout(guides='collect') & theme(legend.spacing.x=unit(0, 'cm'),legend.position='top')
+
+)
+)
+fig1
+fig2 <- p55+p64+p71 +guide_area()+
+plot_layout(guides='collect')
+fig2
+fig2 <- wrap_plots(p55,p64,p71)+
+plot_layout(guides='collect')
+fig2
+fig2 <- wrap_plots(p55,p64,p71)+
+plot_layout(guides='collect') & theme(legend.position='top')
+fig2
+fig2 <- wrap_plots(p55/p64,p71)+
+plot_layout(guides='collect') & theme(legend.position='top')
+fig2
+fig2 <- wrap_plots(p55/p64+p71)+
+plot_layout(guides='collect') & theme(legend.position='top')
+fig2
+fig2 <- wrap_plots(p55/p64+(p71))+
+plot_layout(guides='collect') & theme(legend.position='top')
+fig2
+fig2 <- wrap_plots(p55/p64/(p71))+
+plot_layout(guides='collect') & theme(legend.position='top')
+fig2
+fig2 <- wrap_plots(p55/p64,(p71))+
+plot_layout(guides='collect') & theme(legend.position='top')
+fig2
+fig2
+patch <- p55 +p64
+all <- p71+patch
+all
+all <- patch+p71
+all
+fig2
+fig2 <- fig2+
+plot_layout(axis_titles='collect')
+fig2
+fig1
+ggsave(fig1, file='test.png')
+ggsave(all, file='test.png')
+ggsave(all, file='test.png', height=5, width=8)
+fig2
+ggsave(fig2, file='test.png', height=5, width=8)
+fig2 <- wrap_plots(p55/p64,(p71))+
++ plot_layout(guides='collect', axis_titles = "collect") & theme(legend.position='top')
+fig2 <- wrap_plots(p55/p64,(p71))+
++ plot_layout(guides='collect') & theme(legend.position='top')+
+plot_layout(axis_titles = "collect")
+fig2 <- wrap_plots(p55/p64,(p71))+
++ plot_layout(axis_titles='collect') & theme(legend.position='top')+
+)
+fig2 <- wrap_plots(p55/p64,(p71))+
++ plot_layout(axis_titles='collect') & theme(legend.position='top')
+fig2 <- wrap_plots(p55/p64,(p71))+
++ plot_layout(axis_title='collect') & theme(legend.position='top')
+library(gridExtra)
+grid.arrange(p55, p64, p71, nrow=3)
+library(ggpubr)
+ggarrange(p55,
+ggarrange(p64, p71)
+)
+ggarrange(p55,
+ggarrange(p64, p71, nrow=2)
+))
+ggarrange(p55,
+ggarrange(p64, p71, nrow=2))
+wow <- ggarrange(p55,
+ggarrange(p64, p71, nrow=2))
+wow
+fig <- p55 + (p64/p71)
+fig
+fig <- p55 + (p64/p71) +
+plot_layout(guides='collect') & theme(legend.position='top')
+
+fig
+ggsave(fig, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png")
+fig <- p55 + (p64/p71) +
+plot_layout(guides='collect') & theme(legend.position='top')+
+
+plot_annotation(tag_levels='A') & 
++ theme(plot.tag=element_text(size=12, face='bold'))
+fig <- p55 + (p64/p71) +
+plot_layout(guides='collect') & theme(legend.position='top')
+
+fig <- fig +
+plot_annotation(tag_levels='A') & theme(plot.tag=element_text(size=12, face='bold'))
+fig
+fig <- p55 + (p64/p71) +
+plot_layout(guides='collect') & theme(legend.position='bottom') +
+
+plot_annotation(tag_levels='A') & theme(plot.tag=element_text(size=12, face='bold'))
+fig
+fig <- p55 + (p64/p71) +
+plot_layout(guides='collect') & theme(legend.position='bottom') +
+
+plot_annotation(tag_levels='A') & theme(plot.tag=element_text(size=12, face='bold'))
+fig
+fig <- p55 + (p64/p71) +
+plot_layout(guides='collect') & theme(legend.position='bottom')
+
+fig <- fig +
+plot_annotation(tag_levels='A') & theme(plot.tag=element_text(size=12, face='bold'))
+fig
+ggsave(fig, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png")
+ggsave(fig, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=7.5)
+ggsave(fig, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=8)
+ggsave(fig, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=9)
+ggsave(fig, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=9, height=6)
+ggsave(fig, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=9, height=6.5)
+ggsave(fig, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=9, height=6.2)
+ggsave(fig, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=9.4, height=6.2)
+fig <- p55 + (p64/p71) +
+plot_layout(guides='collect', heights=unit(c(1,1), c('cm', 'null')))+plot_annotation(tag_levels='A') & theme(plot.tag=element_text(size=12, face='bold') & theme(legend.position='top'))
+
+fig
+fig <- p55 + (p64/p71)
+fig
+fig1 <- guide_area()/ fig+
+plot_layout(guides='collect', heights=unit(c(1,1), c('cm', 'null')))+plot_annotation(tag_levels='A') & theme(plot.tag=element_text(size=12, face='bold') & theme(legend.position='top'))
+
+fig1
+ggsave(fig, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=9.4, height=6.2)
+ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=9.4, height=6.2)
+fig1 <- guide_area()/ fig+
+plot_layout(guides='collect', heights=unit(c(1,1), c('cm', 'null')))+ & theme(legend.position='top'))
+
+fig1 <- guide_area()/ fig+
+plot_layout(guides='collect', heights=unit(c(1,1), c('cm', 'null'))) & theme(legend.position='top'))
+
+fig1
+fig1 <- guide_area()/ fig+
+plot_layout(guides='collect', heights=unit(c(1,1), c('cm', 'null'))) & theme(legend.position='top')
+
+fig1
+fig1 <- fig1 +
+plot_annotation(tag_levels='A') & theme(plot.tag=element_text(size=12, face='bold')
+)
+fig1
+ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=9.4, height=6.2)
+ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=8.4, height=6.2)
+ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=8.5, height=6.2)
+ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=8.5, height=6.5)
+ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=8.6, height=6.5)
+ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=8.7, height=6.5)
+ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=8.8, height=6.5)
+ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=8.9, height=6.5)
+ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.pdf", width=8.9, height=6.5)
+ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.tiff", width=8.9, height=6.5)
+ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.eps", width=8.9, height=6.5)
+savehistory('Jan_25_2024.txt')
+
+
+#######################################################################################################################################################################################################################################
+
+setwd(dir='raw_data/for_quantification_based_analyses/Reads/CHURP_reads_QCd/re_analyses')
+set.seed(1234567)
+library(tidyverse)
+library(ggplot2)
+library(patchwork)
+library(stringr)
+library(ggtext)
+pca <- read.csv('Only_PCA_analyses_09_01_2023/pcaData.csv')
+pca$Substrate <- factor(pca$Substrate, levels=c('Glucose', 'Low melanin necromass', 'High melanin necromass'))
+pca_p <- ggplot(pca, aes(PC1, PC2, color=Substrate))+
+geom_point(alpha=0.4, size=5)+
+theme_classic(base_size=12)+
+labs(x="PC1:94% variance", y="PC2:3% variance")+
+theme(panel.border=element_rect(fill="NA", linewidth=1, color="black"))
+pca_p
+lmg <- read.csv('FUNGAL_RESPONSE/Figure_1_overall/DEGs_alone/LM_v_G.csv')
+hmg <- read.csv('FUNGAL_RESPONSE/Figure_1_overall/DEGs_alone/HM_v_G.csv')
+hmlm <- read.csv('FUNGAL_RESPONSE/Figure_1_overall/DEGs_alone/HM_v_LM.csv')
+lmg1 <- lmg %>%
+mutate(Expression = case_when(log2FoldChange >= 1 & padj <= 0.05 ~ "Up regulated", log2FoldChange <= -1 & padj <= 0.05 ~ "Down regulated", TRUE ~ "Not Significant"))
+lmg_p <- ggplot(lmg1, aes(log2FoldChange, -log10(padj)))+
+geom_point(aes(color=Expression), size=3, alpha=0.4)+
+scale_color_manual(values=c("#0C7BDC", "gray", "#FFC20A"))+
+theme_classic(base_size=12)+geom_vline(xintercept=c(-1, 1, -2, 2), linetype="dashed")+
+geom_hline(yintercept=-log10(0.05))+
+theme(panel.border=element_rect(fill=NA, color="black", linewidth=1))+
+labs(x="log2 fold change", y="-log10 (*P* adjusted value)")+
+scale_x_continuous(breaks=c(seq(-8,8,1)), limits=c(-8,8))+
+theme(axis.title.y=element_markdown())
+lmg_p
+hmg1 <- hmg %>%
+mutate(Expression = case_when(log2FoldChange >= 1 & padj <= 0.05 ~ "Up regulated", log2FoldChange <= -1 & padj <= 0.05 ~ "Down regulated", TRUE ~ "Not Significant"))
+hmg_p <- ggplot(hmg1, aes(log2FoldChange, -log10(padj)))+
+geom_point(aes(color=Expression), size=3, alpha=0.4)+
+scale_color_manual(values=c("#0C7BDC", "gray", "#FFC20A"))+
+theme_classic(base_size=12)+geom_vline(xintercept=c(-1, 1, -2, 2), linetype="dashed")+
+geom_hline(yintercept=-log10(0.05))+
+theme(panel.border=element_rect(fill=NA, color="black", linewidth=1))+
+labs(x="log2 fold change", y="-log10 (*P* adjusted value)")+
+scale_x_continuous(breaks=c(seq(-8,8,1)), limits=c(-8,8))+
+theme(axis.title.y=element_markdown())
+hmg_p
+hmg_p <- ggplot(hmg1, aes(log2FoldChange, -log10(padj)))+
+geom_point(aes(color=Expression), size=3, alpha=0.4)+
+scale_color_manual(values=c("#0C7BDC", "gray", "#FFC20A"))+
+theme_classic(base_size=12)+geom_vline(xintercept=c(-1, 1, -2, 2), linetype="dashed")+
+geom_hline(yintercept=-log10(0.05))+
+theme(panel.border=element_rect(fill=NA, color="black", linewidth=1))+
+labs(x="log2 fold change /(High melanin necromass/Glucose)", y="-log10 (*P* adjusted value)")+
+scale_x_continuous(breaks=c(seq(-8,8,1)), limits=c(-8,8))+
+theme(axis.title.y=element_markdown())
+hmg_p
+hmg_p <- ggplot(hmg1, aes(log2FoldChange, -log10(padj)))+
+geom_point(aes(color=Expression), size=3, alpha=0.4)+
+scale_color_manual(values=c("#0C7BDC", "gray", "#FFC20A"))+
+theme_classic(base_size=12)+geom_vline(xintercept=c(-1, 1, -2, 2), linetype="dashed")+
+geom_hline(yintercept=-log10(0.05))+
+theme(panel.border=element_rect(fill=NA, color="black", linewidth=1))+
+labs(x="log2 fold change /(High melanin necromass/Glucose)", y="-log10 (*P* adjusted value)")+
+scale_x_continuous(breaks=c(seq(-8,8,1)), limits=c(-8,8))+
+theme(axis.title.y=element_markdown())+
+theme(axis.title=x=element_markdown())
+hmg_p <- ggplot(hmg1, aes(log2FoldChange, -log10(padj)))+
+geom_point(aes(color=Expression), size=3, alpha=0.4)+
+scale_color_manual(values=c("#0C7BDC", "gray", "#FFC20A"))+
+theme_classic(base_size=12)+geom_vline(xintercept=c(-1, 1, -2, 2), linetype="dashed")+
+geom_hline(yintercept=-log10(0.05))+
+theme(panel.border=element_rect(fill=NA, color="black", linewidth=1))+
+labs(x="log2 fold change /(High melanin necromass/Glucose)", y="-log10 (*P* adjusted value)")+
+scale_x_continuous(breaks=c(seq(-8,8,1)), limits=c(-8,8))+
+theme(axis.title.y=element_markdown())+
+theme(axis.title.x=element_markdown())
+hmg_p
+hmg_p <- ggplot(hmg1, aes(log2FoldChange, -log10(padj)))+
+geom_point(aes(color=Expression), size=3, alpha=0.4)+
+scale_color_manual(values=c("#0C7BDC", "gray", "#FFC20A"))+
+theme_classic(base_size=12)+geom_vline(xintercept=c(-1, 1, -2, 2), linetype="dashed")+
+geom_hline(yintercept=-log10(0.05))+
+theme(panel.border=element_rect(fill=NA, color="black", linewidth=1))+
+labs(x="log2 fold change /(High melanin necromass/Glucose)", y="-log10 (*P* adjusted value)")+
+scale_x_continuous(breaks=c(seq(-8,8,1)), limits=c(-8,8))+
+theme(axis.title.y=element_markdown())
+hmg_p
+hmg_p <- ggplot(hmg1, aes(log2FoldChange, -log10(padj)))+
+geom_point(aes(color=Expression), size=3, alpha=0.4)+
+scale_color_manual(values=c("#0C7BDC", "gray", "#FFC20A"))+
+theme_classic(base_size=12)+geom_vline(xintercept=c(-1, 1, -2, 2), linetype="dashed")+
+geom_hline(yintercept=-log10(0.05))+
+theme(panel.border=element_rect(fill=NA, color="black", linewidth=1))+
+labs(x="log2 fold change </(High melanin necromass/Glucose>)", y="-log10 (*P* adjusted value)")+
+scale_x_continuous(breaks=c(seq(-8,8,1)), limits=c(-8,8))+
+theme(axis.title.y=element_markdown(),
+)
+hmg_p <- ggplot(hmg1, aes(log2FoldChange, -log10(padj)))+
+geom_point(aes(color=Expression), size=3, alpha=0.4)+
+scale_color_manual(values=c("#0C7BDC", "gray", "#FFC20A"))+
+theme_classic(base_size=12)+geom_vline(xintercept=c(-1, 1, -2, 2), linetype="dashed")+
+geom_hline(yintercept=-log10(0.05))+
+theme(panel.border=element_rect(fill=NA, color="black", linewidth=1))+
+labs(x="log2 fold change </(High melanin necromass/Glucose>)", y="-log10 (*P* adjusted value)")+
+scale_x_continuous(breaks=c(seq(-8,8,1)), limits=c(-8,8))+
+theme(axis.title.y=element_markdown())+
+theme(axis.title.x=element_markdown())
+hmg_p
+hmg_p <- ggplot(hmg1, aes(log2FoldChange, -log10(padj)))+
+geom_point(aes(color=Expression), size=3, alpha=0.4)+
+scale_color_manual(values=c("#0C7BDC", "gray", "#FFC20A"))+
+theme_classic(base_size=12)+geom_vline(xintercept=c(-1, 1, -2, 2), linetype="dashed")+
+geom_hline(yintercept=-log10(0.05))+
+theme(panel.border=element_rect(fill=NA, color="black", linewidth=1))+
+labs(x="log2 fold change)", y="-log10 (*P* adjusted value)")+
+scale_x_continuous(breaks=c(seq(-8,8,1)), limits=c(-8,8))+
+theme(axis.title.y=element_markdown())
+hmg_p
+hmg_p <- ggplot(hmg1, aes(log2FoldChange, -log10(padj)))+
+geom_point(aes(color=Expression), size=3, alpha=0.4)+
+scale_color_manual(values=c("#0C7BDC", "gray", "#FFC20A"))+
+theme_classic(base_size=12)+geom_vline(xintercept=c(-1, 1, -2, 2), linetype="dashed")+
+geom_hline(yintercept=-log10(0.05))+
+theme(panel.border=element_rect(fill=NA, color="black", linewidth=1))+
+labs(x="log2 fold change", y="-log10 (*P* adjusted value)")+
+scale_x_continuous(breaks=c(seq(-8,8,1)), limits=c(-8,8))+
+theme(axis.title.y=element_markdown())
+hmg_p
+hmlm1 <- hmlm %>%
+mutate(Expression = case_when(log2FoldChange >= 1 & padj <= 0.05 ~ "Up regulated", log2FoldChange <= -1 & padj <= 0.05 ~ "Down regulated", TRUE ~ "Not Significant"))
+hmlm_p <- ggplot(hmlm1, aes(log2FoldChange, -log10(padj)))+
+geom_point(aes(color=Expression), size=3, alpha=0.4)+
+scale_color_manual(values=c("#0C7BDC", "gray", "#FFC20A"))+
+theme_classic(base_size=12)+geom_vline(xintercept=c(-1, 1, -2, 2), linetype="dashed")+
+geom_hline(yintercept=-log10(0.05))+
+theme(panel.border=element_rect(fill=NA, color="black", linewidth=1))+
+labs(x="log2 fold change", y="-log10 (*P* adjusted value)")+
+scale_x_continuous(breaks=c(seq(-8,8,1)), limits=c(-8,8))+
+theme(axis.title.y=element_markdown())
+hmlm_p
+hmlm_p
+fig_1 <- pca_p + lmg_p/hmg_p + hmlm_p
+fig_1
+fig_1
+fig_1 <- pca_p/ hmg_p/lmg_p /hmlm_p
+fig_1
+fig_1 <- (pca_p+ lmg_p)/(hmg_p +hmlm_p)
+fig_1
+fig_1
+fig_1 <- (pca_p|lmg_p)/(hmg_p | hmlm_p)
+fig_1
+fig_1 <- (pca_p+ lmg_p)/(hmg_p +hmlm_p)
+fig_1
+pca_p1 <- pca_p +
+theme(legend.position='top')
+pca_p1 
+fig_1 <- (pca_p1+ lmg_p)/(hmg_p +hmlm_p)
+fig_1
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p)
+fig_2
+fig_2
+fig_2 <- fig_2 +
+plot_annotation(tag_levels='A') & 
+theme(plot.tag=element_text(size=12))
+fig_2
+plot_annotation(tag_levels='A') & 
+theme(plot.tag=element_text(size=12, face=bold))
+plot_annotation(tag_levels='A') & 
+theme(plot.tag=element_text(size=12, face='bold'))
+fig_2 <- fig_2 +
+plot_annotation(tag_levels='A') & 
+theme(plot.tag=element_text(size=12, face='bold'))
+fig_2
+ggsave(fig_2, file='test.png')
+ggsave(fig_2, file='test.png', width=8, height=6)
+ggsave(fig_2, file='test.png', width=9, height=5)
+ggsave(fig_2, file='test.png', width=9, height=6)
+ggsave(fig_2, file='test.png', width=9.5, height=6)
+ggsave(fig_2, file='test.png', width=10, height=6)
+ggsave(fig_2, file='test.png', width=7, height=7)
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p) +
+plot_layout(guides='collect')
+fig_2
+ggsave(fig_2, file='test.png', width=7, height=7)
+ggsave(fig_2, file='test.png', width=7, height=5)
+ggsave(fig_2, file='test.png', width=8, height=5)
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p) +
+plot_layout(guides='auto')
+fig_2
+fig_2
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p) +
+plot_layout(guides='collect') & theme(legend.position='bottom')
+fig_2
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p) +
+plot_layout(guides='collect') & theme(legend.position='top')
+fig_2
+fig_2
+ggsave(fig_2, file='test.png', width=8, height=5)
+ggsave(fig_2, file='test.png', width=8, height=6)
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p)
+fig_2
+hmlm_p <- ggplot(hmlm1, aes(log2FoldChange, -log10(padj)))+
+geom_point(aes(color=Expression), size=3, alpha=0.4)+
+scale_color_manual(values=c("#0C7BDC", "gray", "#FFC20A"))+
+theme_classic(base_size=12)+geom_vline(xintercept=c(-1, 1, -2, 2), linetype="dashed")+
+geom_hline(yintercept=-log10(0.05))+
+theme(panel.border=element_rect(fill=NA, color="black", linewidth=1))+
+labs(x="log2 fold change", y="-log10 (*P* adjusted value)")+
+scale_x_continuous(breaks=c(seq(-8,8,2)), limits=c(-8,8))+
+theme(axis.title.y=element_markdown())
+hmg_p <- ggplot(hmg1, aes(log2FoldChange, -log10(padj)))+
+geom_point(aes(color=Expression), size=3, alpha=0.4)+
+scale_color_manual(values=c("#0C7BDC", "gray", "#FFC20A"))+
+theme_classic(base_size=12)+geom_vline(xintercept=c(-1, 1, -2, 2), linetype="dashed")+
+geom_hline(yintercept=-log10(0.05))+
+theme(panel.border=element_rect(fill=NA, color="black", linewidth=1))+
+labs(x="log2 fold change", y="-log10 (*P* adjusted value)")+
+scale_x_continuous(breaks=c(seq(-8,8,2)), limits=c(-8,8))+
+theme(axis.title.y=element_markdown())
+lmg_p <- ggplot(lmg1, aes(log2FoldChange, -log10(padj)))+
+geom_point(aes(color=Expression), size=3, alpha=0.4)+
+scale_color_manual(values=c("#0C7BDC", "gray", "#FFC20A"))+
+theme_classic(base_size=12)+geom_vline(xintercept=c(-1, 1, -2, 2), linetype="dashed")+
+geom_hline(yintercept=-log10(0.05))+
+theme(panel.border=element_rect(fill=NA, color="black", linewidth=1))+
+labs(x="log2 fold change", y="-log10 (*P* adjusted value)")+
+scale_x_continuous(breaks=c(seq(-8,8,2)), limits=c(-8,8))+
+theme(axis.title.y=element_markdown())
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p)
+fig_2
+fig_2
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p) +
+plot_layout(guides='collect') & theme(legend.position='bottom', legend.spacing.x=unit(0.5, 'cm'))
+
+fig_2
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p) +
+plot_layout(guides='collect') & theme(legend.position='bottom', legend.spacing.x=unit(0.1, 'cm'))
+
+fig_2
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p) +
+plot_layout(guides='collect') & theme(legend.position='bottom', legend.spacing.x=unit(0.07, 'cm'))
+
+fig_2
+ggsave(fig_2, file='test.png')
+ggsave(fig_2, file='test.png', width=8)
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p) +
+plot_layout(guides='collect') & theme(legend.position='bottom', legend.spacing.x=unit(0.01, 'cm'))
+
+ggsave(fig_2, file='test.png', width=8)
+ggsave(fig_2, file='test.png', width=10)
+ggsave(fig_2, file='test.png', width=10)
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p) +
+plot_layout(guides='collect') & theme(legend.position='bottom', legend.spacing.x=unit(0, 'cm'))
+
+ggsave(fig_2, file='test.png', width=10)
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p) +
+plot_layout(guides='collect') & theme(legend.position='bottom', legend.spacing.x=unit(0, 'cm'), guide_legend(nrow=2))
+
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p) +
+plot_layout(guides='collect') & theme(legend.spacing.x=unit(0, 'cm'))
+
+fig_2
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p) +
+plot_layout(guides='collect') & theme(legend.spacing.x=unit(0, 'cm'), legend.background=element_rect(linetype='solid', size=0.5, color='black')
+
+)
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p) +
+plot_layout(guides='collect') & theme(legend.spacing.x=unit(0, 'cm'), legend.background=element_rect(linetype='solid', linewidth=0.5, color='black'))
+
+fig_2
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p) +
+plot_layout(guides='collect') & theme(legend.spacing.x=unit(0, 'cm'),legend.position='bottom',legend.text=element_text(size=8), legend.title=element_text(size=8), legend.background=element_rect(linetype='solid', linewidth=0.5, color='black'))
+
+fig_3
+fig_2
+ggsave(fig_2, file='test.png')
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p) +
+plot_layout(guides='collect') & theme(legend.spacing.x=unit(0, 'cm'),legend.position='bottom',legend.text=element_text(size=7), legend.title=element_text(size=7), legend.background=element_rect(linetype='solid', linewidth=0.5, color='black'))
+
+ggsave(fig_2, file='test.png')
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p) +
+plot_layout(guides='collect') & theme(legend.spacing.x=unit(0, 'cm'),legend.position='bottom',legend.text=element_text(size=6), legend.title=element_text(size=7, face='bold'), legend.background=element_rect(linetype='solid', linewidth=0.5, color='black'))
+
+ggsave(fig_2, file='test.png')
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p) +
+plot_layout(guides='collect') & theme(legend.spacing.x=unit(0, 'cm'),legend.position='bottom',legend.text=element_text(size=7), legend.title=element_text(size=7, face='bold'), legend.background=element_rect(linetype='solid', linewidth=0.5, color='black'))
+
+ggsave(fig_2, file='test.png', width=7.5, height=7.5)
+ggsave(fig_2, file='test.png', width=8, height=7.5)
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p) +
+plot_layout(guides='collect') & theme(legend.spacing.x=unit(0, 'cm'),legend.position='bottom',legend.text=element_text(size=7), legend.title=element_text(size=7, face='bold'), legend.background=element_rect(linetype='solid', linewidth=0.5, color='black'))+
+
+plot_annotation(tag_levels='A') & 
++ theme(plot.tag=element_text(size=12, face='bold'))
+fig_2 <- wrap_plots(pca_p, lmg_p, hmg_p, hmlm_p) +
+plot_layout(guides='collect') & theme(legend.spacing.x=unit(0, 'cm'),legend.position='bottom',legend.text=element_text(size=7), legend.title=element_text(size=7, face='bold'), legend.background=element_rect(linetype='solid', linewidth=0.5, color='black'))
+
+fig_3 <- fig_2+
+plot_annotation(tag_levels='A') & 
++ theme(plot.tag=element_text(size=12, face='bold'))
+fig_3 <- fig_2+
+plot_annotation(tag_levels='A') & 
++ theme(plot.tag=element_text(size=12, face='bold'))
+fig_3 <- fig_2+
+plot_annotation(tag_levels='A') &
+theme(plot.tag=element_text(size=12, face='bold'))
+fig_3 
+ggsave(fig_3, file='test.png', width=8, height=7)
+ggsave(fig_3, file='test.png', width=7.6, height=7)
+ggsave(fig_3, file='test.png', width=7.8, height=7)
+ggsave(fig_3, file='test.png', width=7.9, height=7)
+ggsave(fig_3, file='test.png', width=8, height=7)
+ggsave(fig_3, file='test.png', width=8, height=6.5)
+ggsave(fig_3, file='test.png', width=8, height=7.5)
+ggsave(fig_3, file='test.png', width=8, height=7.1)
+ggsave(fig_3, file='Figures_for_T_reesei_manuscript/pca_&_volcano.png', width=8, height=7.1)
+ggsave(fig_3, file='Figures_for_T_reesei_manuscript/pca_&_volcano.tiff', width=8, height=7.1)
+ggsave(fig_3, file='Figures_for_T_reesei_manuscript/pca_&_volcano.eps', width=8, height=7.1)
+ggsave(fig_3, file='Figures_for_T_reesei_manuscript/pca_&_volcano.pdf', width=8, height=7.1)
+ggsave(fig_3, file='Figures_for_T_reesei_manuscript/pca_&_volcano.png', width=8, height=8)
+ggsave(fig_3, file='Figures_for_T_reesei_manuscript/pca_&_volcano.pdf', width=8, height=8)
+ggsave(fig_3, file='Figures_for_T_reesei_manuscript/pca_&_volcano.tiff', width=8, height=8)
+ggsave(fig_3, file='Figures_for_T_reesei_manuscript/pca_&_volcano.eps', width=8, height=8)
+deg_lmg <- lmg1 %>%
+count(Expression)
+deg_lmg
+deg_hmg <- hmg1 %>%
+count(Expression)
+deg_hmg
+deg_hmlm <- hmlm1 %>%
+count(Expression)
+deg_hmlm
+rld <- read.csv('normalized_transformed_counts/rld_blind_false.csv')
+glc <- read.csv('GHs/Glucans/Glucans_Figure_Jan_24_2024.csv')
+fc_lmg <- read.csv('FUNGAL_RESPONSE/Figure_1_overall/DEGs_alone/LM_v_G_padj_0.05.csv')
+head(fc_lmg)
+fc_lmg <- read.csv('FUNGAL_RESPONSE/LM_vs_G/LM_vs_G_joined_annot_padj_0.05.csv')
+head(fc_lmg)
+deg <- fc_lmg %>%
+filter(fc_lmg$proteinID %in% glc$GeneID)
+head(deg)
+fc_hmg <- read.csv('FUNGAL_RESPONSE/HM_vs_G/HM_vs_G_annotation_joined_padj_0.05.csv')
+deg <- fc_hmg %>%
+filter(fc_hmg$proteinID %in% glc$GeneID)
+fc_hmlm <- read.csv('FUNGAL_RESPONSE/HM_vs_LM/HM_vs_LM_annotation_joined_pajd_0.05.csv')
+deg <- fc_lmg %>%
+head(deg)
+deg_lmg <- fc_lmg %>%
+filter(fc_lmg$proteinID %in% glc$GeneID)
+deg_hmg <- fc_hmg %>%
+filter(fc_hmg$proteinID %in% glc$GeneID)
+deg_hmlm <- fc_hmlm %>%
+filter(fc_hmlm$proteinID %in% glc$GeneID)
+write.csv(deg_hmlm, file='GHs/Glucans/deg_hmlm_glucans.csv')
+write.csv(deg_hmg, file='GHs/Glucans/deg_hmg_glucans.csv')
+write.csv(deg_lmg, file='GHs/Glucans/deg_lmg_glucans.csv')
+savehistory('Jan_24_2024.txt')
+###########################################################################################################################################################################################
+setwd(dir='raw_data/for_quantification_based_analyses/Reads/CHURP_reads_QCd/re_analyses')
+set.seed(1234567)
+library(tidyverse)
+library(ggplot2)
+library(patchwork)
+library(stringr)
+library(ggtext)
+library(scales)
+############################################################################################################################################################################################
+pca <- read.csv('Only_PCA_analyses_09_01_2023/pcaData.csv')
+pca$Substrate <- factor(pca$Substrate, levels=c('Glucose', 'Low-melanin necromass', 'High-melanin necromass'))
+############################################################################################################################################################################################
+pca_p <- ggplot(pca, aes(PC1, PC2, color=Substrate))+
+geom_point(alpha=0.4, size=2)+
+theme_classic(base_size=12)+
+labs(x="PC1:94% variance", y="PC2:3% variance")+
+theme(panel.border=element_rect(fill="NA", linewidth=1, color="black"))
+pca_p
+############################################################################################################################################################################################
+lmg <- read.csv('FUNGAL_RESPONSE/Figure_1_overall/DEGs_alone/LM_v_G.csv')
+#############################################################################################################################################################################################
+lmg1 <- lmg %>%
+mutate(Expression = case_when(log2FoldChange >= 2 & padj <= 0.05 ~ "Up-regulated", log2FoldChange <= -2 & padj <= 0.05 ~ "Down-regulated", TRUE ~ "Not significant"))
+#############################################################################################################################################################################################
+lmg_p <- ggplot(lmg1, aes(log2FoldChange, -log10(padj)))+
+geom_point(aes(color=Expression), size=1, alpha=0.3)+
+scale_color_manual(values=c("#0C7BDC", "gray", "#FFC20A"))+
+theme_classic(base_size=12)+geom_vline(xintercept=c(-2, 2), linetype="dashed")+
+theme(panel.border=element_rect(fill=NA, color="black", linewidth=1))+
+labs(x="log2 fold change", y="-log10 (*P* adjusted value)")+
+scale_x_continuous(breaks=c(seq(-8,8,2)), limits=c(-8,8))+
+theme(axis.title.y=element_markdown())
+lmg_p
+############################################################################################################################################################################################
+lmg1 %>%
+count(Expression)
+############################################################################################################################################################################################
+lmg_p1 <- lmg_p +
+annotate("text", x=5, y=300, label= "2218", size=4)+
+annotate("text", x=-5, y=300, label= "2004", size=4)
+lmg_p1
+############################################################################################################################################################################################
+hmg <- read.csv('FUNGAL_RESPONSE/Figure_1_overall/DEGs_alone/HM_v_G.csv')
+############################################################################################################################################################################################
+hmg1 <- hmg %>%
+mutate(Expression = case_when(log2FoldChange >= 2 & padj <= 0.05 ~ "Up-regulated", log2FoldChange <= -2 & padj <= 0.05 ~ "Down-regulated", TRUE ~ "Not significant"))
+############################################################################################################################################################################################
+hmg_p <- ggplot(hmg1, aes(log2FoldChange, -log10(padj)))+
+geom_point(aes(color=Expression), size=1, alpha=0.3)+
+scale_color_manual(values=c("#0C7BDC", "gray", "#FFC20A"))+
+theme_classic(base_size=12)+geom_vline(xintercept=c(-2, 2), linetype="dashed")+
+theme(panel.border=element_rect(fill=NA, color="black", linewidth=1))+
+labs(x="log2 fold change", y="-log10 (*P* adjusted value)")+
+scale_x_continuous(breaks=c(seq(-8,8,2)), limits=c(-8,8))+
+theme(axis.title.y=element_markdown())
+hmg_p
+############################################################################################################################################################################################
+hmg1 %>%
+count(Expression)
+############################################################################################################################################################################################
+hmg_p1 <- hmg_p +
+annotate("text", x=5, y=300, label= "2369", size=4)+
+annotate("text", x=-5, y=300, label= "2121", size=4)
+hmg_p1
+############################################################################################################################################################################################
+hmlm <- read.csv('FUNGAL_RESPONSE/Figure_1_overall/DEGs_alone/HM_v_LM.csv')
+############################################################################################################################################################################################
+hmlm1 <- hmlm %>%
+mutate(Expression = case_when(log2FoldChange >= 2 & padj <= 0.05 ~ "Up-regulated", log2FoldChange <= -2 & padj <= 0.05 ~ "Down-regulated", TRUE ~ "Not significant"))
+############################################################################################################################################################################################
+hmlm_p <- ggplot(hmlm1, aes(log2FoldChange, -log10(padj)))+
+geom_point(aes(color=Expression), size=1, alpha=0.3)+
+scale_color_manual(values=c("#0C7BDC", "gray", "#FFC20A"))+
+theme_classic(base_size=12)+geom_vline(xintercept=c(-2, 2), linetype="dashed")+
+theme(panel.border=element_rect(fill=NA, color="black", linewidth=1))+
+labs(x="log2 fold change", y="-log10 (*P* adjusted value)")+
+scale_x_continuous(breaks=c(seq(-8,8,2)), limits=c(-8,8))+
+theme(axis.title.y=element_markdown())
+hmlm_p
+############################################################################################################################################################################################
+hmlm1 %>%
+count(Expression)
+############################################################################################################################################################################################
+hmlm_p1 <- hmlm_p +
+annotate("text", x=5, y=41, label= "286", size=4)+
+annotate("text", x=-5, y=41, label= "122", size=4)
+hmlm_p1
+############################################################################################################################################################################################
+op <- wrap_plots(pca_p,lmg_p1, hmg_p1, hmlm_p1) + 
+plot_layout(guides='collect')
+op
+op1 <- op +
+plot_annotation(tag_levels='A') &
+theme(plot.tag=element_text(size=12, face='bold'))
+op1
+#############################################################################################################################################################################################
+ggsave(op1, file='fig_1.png',width=8, height=6, dpi=600)
+ggsave(op1, file='fig_1.tiff',width=8, height=6, dpi=600, compression='lzw')
+ggsave(op1, file='fig_1.pdf',width=8, height=6, dpi=600)
+#############################################################################################################################################################################################
+
+
