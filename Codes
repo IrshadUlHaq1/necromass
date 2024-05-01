@@ -741,5 +741,101 @@ ggsave(op1, file='fig_1.png',width=8, height=6, dpi=600)
 ggsave(op1, file='fig_1.tiff',width=8, height=6, dpi=600, compression='lzw')
 ggsave(op1, file='fig_1.pdf',width=8, height=6, dpi=600)
 #############################################################################################################################################################################################
+setwd(dir='raw_data/for_quantification_based_analyses/Reads/CHURP_reads_QCd/re_analyses/Peptidase/')
+set.seed(123456)
+library(ggplot2)
+library(scales)
+library(stringr)
+library(tidyverse)
+library(ggtext)
+pep <- read.csv('Peptidases_in_figure_rld_long_format.csv')
+pep <- as.tibble(pep)
+pep
+pep <- read.csv('Peptidases_in_figure_rld_long_format.csv')
+pep <- as.tibble(pep)
+pep
+#############################################################################################################################################################################################
+pep$Substrate <- factor(pep$Substrate, levels=c('Glucose', 'Low-melanin necromass', 'High-melanin necromass'))
+pep$Expression.pattern <- factor(pep$Expression.pattern, levels=c('HLG', 'LHG', 'GLH'))
+#############################################################################################################################################################################################
+p <- ggplot(pep, aes(Substrate, rlog, fill=Substrate))+
+geom_boxplot(width=0.5)+
+geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
+facet_wrap(~Peptidase, scale="free_y")+
+theme_classic(base_size=12)+
+labs(x="", y="regularized log expression")+
+theme(legend.position='top')+
+theme(axis.text.x=element_blank())+
+theme(axis.ticks.x=element_blank())
+p
+#############################################################################################################################################################################################
+p <- ggplot(pep, aes(Substrate, rlog, fill=Substrate))+
+geom_boxplot(width=0.5)+
+geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
+facet_wrap(~Expression.pattern, scale="free_y")+
+theme_classic(base_size=12)+
+labs(x="", y="regularized log expression")+
+theme(legend.position='top')+
+theme(axis.text.x=element_blank())+
+theme(axis.ticks.x=element_blank())
+p
+#############################################################################################################################################################################################
+p <- ggplot(pep, aes(Substrate, rlog, fill=Substrate))+
+geom_boxplot(width=0.5)+
+geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
+facet_wrap(~Peptidase, scale="free_y")+
+theme_classic(base_size=12)+
+labs(x="", y="regularized log expression")+
+theme(legend.position='top')+
+theme(axis.text.x=element_blank())+
+theme(axis.ticks.x=element_blank())
+p
+#############################################################################################################################################################################################
+p1 <- p+
+theme(legend.position=c(.85, .20))
+p1 <- p+
+theme(legend.position=c(.85, .20)
+)
+p1
+p1 <- p+
+theme(legend.position=c(.85, .15)
+)
+p
+p1
+p1 <- p+
+theme(legend.position=c(.85, .15))+
+theme(legend.box=element_rect(color='black')
+)
+p1
+p1 <- p+
+theme(legend.position=c(.85, .15)+
+theme(legend.box=element_rect(color='black'))
+)
+p1
+p1 <- p+
+theme(legend.position=c(.85, .15))
+p1
+p1
+ggsave(p1, file='proteases_in_main_figure.png', height=7, width=7, dpi=600)
+ggsave(p1, file='proteases_in_main_figure.png', height=6, width=6, dpi=600)
+ggsave(p1, file='proteases_in_main_figure.png', height=7, width=7, dpi=600)
+p1 <- p+
+theme(legend.position=c(.80, .15))
+p1
+p1 <- p+
+theme(legend.position=c(.90, .15))
+p1
+p1 <- p+
+theme(legend.position=c(.88, .15))
+p1
+theme(legend.position=c(.86, .15))
+p1 <- p+
+theme(legend.position=c(.85, .15))
+p1
+#############################################################################################################################################################################################
+ggsave(p1, file='proteases_in_main_figure.png', height=7, width=7, dpi=600)
+ggsave(p1, file='proteases_in_main_figure.pdf', height=7, width=7, dpi=600)
+ggsave(p1, file='proteases_in_main_figure.tiff', height=7, width=7, dpi=600, compression='lzw')
+savehistory('March_08_2024_peptidase.txt')
 
 
