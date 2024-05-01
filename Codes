@@ -741,6 +741,7 @@ ggsave(op1, file='fig_1.png',width=8, height=6, dpi=600)
 ggsave(op1, file='fig_1.tiff',width=8, height=6, dpi=600, compression='lzw')
 ggsave(op1, file='fig_1.pdf',width=8, height=6, dpi=600)
 #############################################################################################################################################################################################
+# Figure 6 (proteases)
 setwd(dir='raw_data/for_quantification_based_analyses/Reads/CHURP_reads_QCd/re_analyses/Peptidase/')
 set.seed(123456)
 library(ggplot2)
