@@ -291,20 +291,12 @@ fig1 <- fig1 +
 plot_annotation(tag_levels='A') & theme(plot.tag=element_text(size=12, face='bold')
 )
 fig1
-ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=9.4, height=6.2)
-ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=8.4, height=6.2)
-ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=8.5, height=6.2)
-ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=8.5, height=6.5)
-ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=8.6, height=6.5)
-ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=8.7, height=6.5)
-ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=8.8, height=6.5)
+
 ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.png", width=8.9, height=6.5)
 ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.pdf", width=8.9, height=6.5)
 ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.tiff", width=8.9, height=6.5)
 ggsave(fig1, file="Figures_for_T_reesei_manuscript/glucan_main_figure_sep.eps", width=8.9, height=6.5)
 savehistory('Jan_25_2024.txt')
-
-
 #######################################################################################################################################################################################################################################
 
 setwd(dir='raw_data/for_quantification_based_analyses/Reads/CHURP_reads_QCd/re_analyses')
@@ -610,18 +602,6 @@ fig_3 <- fig_2+
 plot_annotation(tag_levels='A') &
 theme(plot.tag=element_text(size=12, face='bold'))
 fig_3 
-ggsave(fig_3, file='test.png', width=8, height=7)
-ggsave(fig_3, file='test.png', width=7.6, height=7)
-ggsave(fig_3, file='test.png', width=7.8, height=7)
-ggsave(fig_3, file='test.png', width=7.9, height=7)
-ggsave(fig_3, file='test.png', width=8, height=7)
-ggsave(fig_3, file='test.png', width=8, height=6.5)
-ggsave(fig_3, file='test.png', width=8, height=7.5)
-ggsave(fig_3, file='test.png', width=8, height=7.1)
-ggsave(fig_3, file='Figures_for_T_reesei_manuscript/pca_&_volcano.png', width=8, height=7.1)
-ggsave(fig_3, file='Figures_for_T_reesei_manuscript/pca_&_volcano.tiff', width=8, height=7.1)
-ggsave(fig_3, file='Figures_for_T_reesei_manuscript/pca_&_volcano.eps', width=8, height=7.1)
-ggsave(fig_3, file='Figures_for_T_reesei_manuscript/pca_&_volcano.pdf', width=8, height=7.1)
 ggsave(fig_3, file='Figures_for_T_reesei_manuscript/pca_&_volcano.png', width=8, height=8)
 ggsave(fig_3, file='Figures_for_T_reesei_manuscript/pca_&_volcano.pdf', width=8, height=8)
 ggsave(fig_3, file='Figures_for_T_reesei_manuscript/pca_&_volcano.tiff', width=8, height=8)
