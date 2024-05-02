@@ -826,9 +826,89 @@ write.table(rld3, file='GHs/Glucans/GH17_GH128.csv' row.names=FALSE)
 write.table(rld3, file='GHs/Glucans/GH17_GH128.csv', sep=',', row.names=FALSE)
 write.table(rld3, file='GHs/Glucans/GH17_GH128_Supplementary_Fig.csv', sep=',', row.names=FALSE)
 #############################################################################################################################################################################################
-
-
-
+#### Figure 4 Glucans
+setwd(dir='raw_data/for_quantification_based_analyses/Reads/CHURP_reads_QCd/re_analyses')
+set.seed(12345)
+library(ggplot2)
+library(stringr)
+library(scales)
+library(ggtext)
+library(patchwork)
+library(tidyverse)
+#############################################################################################################################################################################################
+rld1 <- read.csv('GHs/Glucans/rld_GH55_final_figure.csv')
+rld1 <- as.tibble(rld1)
+#############################################################################################################################################################################################
+rld1 <- rld1 %>%
+pivot_longer(TRG1:TrHM3, names_to="Samples", values_to="rlog") %>%
+mutate(Substrate = case_when(Samples %in%  c("TRG1", "TRG2", "TRG3") ~ "Glucose", Samples %in% c("LM1Tr","LM2Tr","LM3Tr") ~ "Low-melanin necromass", Samples %in% c("TrHM1","TrHM2","TrHM3") ~"High-melanin necromass"))
+#############################################################################################################################################################################################
+rld1$Substrate <- factor(rld1$Substrate, levels=c("Glucose", "Low-melanin necromass","High-melanin necromass"))
+#############################################################################################################################################################################################
+p55 <- ggplot(rld1, aes(Substrate, rlog, fill=Substrate))+
+geom_boxplot(width=0.5)+
+geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
+facet_wrap(~GeneID, scale="free_y")+
+theme_classic(base_size=12)+
+labs(x="", y="regularized log expression")+
+theme(legend.position='top')+
+theme(axis.text.x=element_blank())+
+theme(axis.ticks.x=element_blank())
+p55
+#############################################################################################################################################################################################
+rld64 <- read.csv('GHs/Glucans/rld_GH64.csv')
+rld64 <- as.tibble(rld64)
+rld64
+#############################################################################################################################################################################################
+rld64 <- rld64 %>%
+pivot_longer(TRG1:TrHM3, names_to="Samples", values_to="rlog") %>%
+mutate(Substrate = case_when(Samples %in%  c("TRG1", "TRG2", "TRG3") ~ "Glucose", Samples %in% c("LM1Tr","LM2Tr","LM3Tr") ~ "Low-melanin necromass", Samples %in% c("TrHM1","TrHM2","TrHM3") ~"High-melanin necromass"))
+rld64$Substrate <- factor(rld64$Substrate, levels=c("Glucose", "Low-melanin necromass","High-melanin necromass"))
+#############################################################################################################################################################################################
+p64 <- ggplot(rld64, aes(Substrate, rlog, fill=Substrate))+
+geom_boxplot(width=0.5)+
+geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
+facet_wrap(~GeneID, scale="free_y")+
+theme_classic(base_size=12)+
+labs(x="", y="regularized log expression")+
+theme(legend.position='top')+
+theme(axis.text.x=element_blank())+
+theme(axis.ticks.x=element_blank())
+p64
+#############################################################################################################################################################################################
+rld71 <- read.csv('GHs/Glucans/rld_GH71.csv')
+rld71 <- as.tibble(rld71)
+#############################################################################################################################################################################################
+rld71 <- rld71 %>%
+pivot_longer(TRG1:TrHM3, names_to="Samples", values_to="rlog") %>%
+mutate(Substrate = case_when(Samples %in%  c("TRG1", "TRG2", "TRG3") ~ "Glucose", Samples %in% c("LM1Tr","LM2Tr","LM3Tr") ~ "Low-melanin necromass", Samples %in% c("TrHM1","TrHM2","TrHM3") ~"High-melanin necromass"))
+rld71$Substrate <- factor(rld71$Substrate, levels=c("Glucose", "Low-melanin necromass","High-melanin necromass"))
+#############################################################################################################################################################################################
+p71 <- ggplot(rld71, aes(Substrate, rlog, fill=Substrate))+
+geom_boxplot(width=0.5)+
+geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
+facet_wrap(~GeneID, scale="free_y")+
+theme_classic(base_size=12)+
+labs(x="", y="regularized log expression")+
+theme(legend.position='top')+
+theme(axis.text.x=element_blank())+
+theme(axis.ticks.x=element_blank())
+p71
+#############################################################################################################################################################################################
+fig <- p55 + (p64/p71)
+#############################################################################################################################################################################################
+fig1 <- guide_area()/ fig+
+plot_layout(guides='collect', heights=unit(c(1,1), c('cm', 'null'))) & theme(legend.position='top')
+#############################################################################################################################################################################################
+fig1 <- fig1 +
+plot_annotation(tag_levels='A') & theme(plot.tag=element_text(size=12, face='bold'))
+#############################################################################################################################################################################################
+ggsave(fig1, file='all.png', width=9, height=6, dpi=600)
+ggsave(fig1, file='all.pdf', width=9, height=6, dpi=600)
+ggsave(fig1, file='all.tiff', width=9, height=6, dpi=600, compression='lzw')
+#############################################################################################################################################################################################
+savehistory('March_07_2024.txt')
+#############################################################################################################################################################################################
 
 
 
