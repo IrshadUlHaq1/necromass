@@ -36,59 +36,6 @@ ggsave(p1, file='proteases_in_main_figure.tiff', height=7, width=7, dpi=600, com
 #############################################################################################################################################################################################
 
 
-########## Supplementary Figure Glucans
-setwd(dir='raw_data/for_quantification_based_analyses/Reads/CHURP_reads_QCd/re_analyses')
-library(tidyverse)
-library(ggplot2)
-library(scales)
-#############################################################################################################################################################################################
-df <- read.csv('GHs/Glucans/GH17_GH128_For_supplementary_figure.csv')
-rld <- read.csv('normalized_transformed_counts/rld_blind_false.csv')
-df <- as.tibble(df)
-rld <- as.tibble(rld)
-#############################################################################################################################################################################################
-rld1 <- rld %>%
-filter(rld$GeneID %in% df$GeneID)
-rld1
-#############################################################################################################################################################################################
-rld2 <- rld1 %>%
-mutate(CAZyme = case_when(GeneID == "124460" ~ "124460 (GH17)", GeneID=="110434" ~"110434 (GH17)", GeneID == "141702"~ "141702 (GH17)", GeneID == "105655" ~ "105655 (GH128)", GeneID == "34405" ~ "34405 (GH128)"))
-#############################################################################################################################################################################################
-rld3 <- rld2 %>%
-pivot_longer(TRG1:TrHM3, names_to="Samples", values_to="rlog") %>%
-mutate(Substrate = case_when(Samples %in%  c("TRG1", "TRG2", "TRG3") ~ "Glucose", Samples %in% c("LM1Tr","LM2Tr","LM3Tr") ~ "Low-melanin necromass", Samples %in% c("TrHM1","TrHM2","TrHM3") ~"High-melanin necromass"))
-rld3
-rld3$Substrate<- factor(rld3$Substrate, levels=c("Glucose", "Low-melanin necromass", "High-melanin necromass"))
-#############################################################################################################################################################################################
-rld3$CAZyme<- factor(rld3$CAZyme, levels=c("124460 (GH17)", "110434 (GH17)", "141702 (GH17)", "105655 (GH128)", "34405 (GH128)"))
-#############################################################################################################################################################################################
-p <- ggplot(rld3, aes(Substrate, rlog, fill=Substrate))+
-geom_boxplot(width=0.5)+
-geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
-facet_wrap(~CAZyme, scale="free_y")+
-theme_classic(base_size=12)+
-labs(x="", y="regularized log expression")+
-theme(legend.position='top')+
-theme(axis.text.x=element_blank())+
-theme(axis.ticks.x=element_blank())
-p
-#############################################################################################################################################################################################
-ggsave(p, file='GHs/Glucans/Supplemntary_Fig_GH17_GH128.png', height=6, width=6, dpi=600)
-ggsave(p, file='GHs/Glucans/Supplemntary_Fig_GH17_GH128.tiff', height=6, width=6, dpi=600, compression='lzw')
-ggsave(p, file='GHs/Glucans/Supplemntary_Fig_GH17_GH128.pdf', height=6, width=6, dpi=600)
-#############################################################################################################################################################################################
-p2 <- p +
-theme(legend.position=c(.85, .20))
-#############################################################################################################################################################################################
-ggsave(p2, file='GHs/Glucans/Supplemntary_Fig_GH17_GH128_leg.tiff', height=6, width=6.4, dpi=600, compression = 'lzw')
-ggsave(p2, file='GHs/Glucans/Supplemntary_Fig_GH17_GH128_leg.pdf', height=6, width=6.4, dpi=600)
-ggsave(p2, file='GHs/Glucans/Supplemntary_Fig_GH17_GH128_leg.png', height=6, width=6.4, dpi=600)
-ggsave(p2, file='GHs/Glucans/Supplemntary_Fig_GH17_GH128_leg.pdf', height=6, width=6.5, dpi=600)
-#############################################################################################################################################################################################
-write.table(rld3, file='GHs/Glucans/GH17_GH128.csv' row.names=FALSE)
-write.table(rld3, file='GHs/Glucans/GH17_GH128.csv', sep=',', row.names=FALSE)
-write.table(rld3, file='GHs/Glucans/GH17_GH128_Supplementary_Fig.csv', sep=',', row.names=FALSE)
-#############################################################################################################################################################################################
 
 
 ########## Figure 4 Glucans
@@ -174,6 +121,10 @@ ggsave(fig1, file='all.tiff', width=9, height=6, dpi=600, compression='lzw')
 #############################################################################################################################################################################################
 savehistory('March_07_2024.txt')
 #############################################################################################################################################################################################
+
+
+
+
 
 
 ########## Figure 1
@@ -274,93 +225,11 @@ theme(plot.tag=element_text(size=12, face='bold'))
 ggsave(op1, file='fig_1_LFC_2.tiff',width=8, height=6, dpi=600, compression='lzw')
 ggsave(op1, file='fig_1_LFC_2.pdf',width=8, height=6, dpi=600)
 ggsave(op1, file='fig_1_LFC_2.png',width=8, height=6, dpi=600)
-#############################################################################################################################################################################################
 
 
-########## Supplementary Figure 5
-setwd(dir='raw_data/for_quantification_based_analyses/Reads/CHURP_reads_QCd/re_analyses')
-set.seed(1234567)
-library(tidyverse)
-library(ggplot2)
-library(stringr)
-library(patchwork)
+############################################################################################
 #############################################################################################################################################################################################
-df <- read.csv('FUNGAL_RESPONSE/Laccase_(AA1)_encoding_genes_upreg_only.csv')
-rld <- read.csv('normalized_transformed_counts/rld_blind_false.csv')
-rld1 <- rld %>%
-filter(rld$GeneID %in% df$GeneID)
-#############################################################################################################################################################################################
-write.csv(rld1, file='FUNGAL_RESPONSE/Laccase_(AA1)_encoding_genes_upreg_only_RLD.csv')
-#############################################################################################################################################################################################
-df <- read.csv('FUNGAL_RESPONSE/Laccase_(AA1)_encoding_genes_upreg_only_RLD.csv')
-#############################################################################################################################################################################################
-df <- df %>%
-pivot_longer(TRG1:TrHM3, names_to="Samples", values_to="rlog")
-#############################################################################################################################################################################################
-df <- df %>%
-mutate(Substrate = case_when(Samples %in%  c("TRG1", "TRG2", "TRG3") ~ "Glucose", Samples %in% c("LM1Tr","LM2Tr","LM3Tr") ~ "Low melanin necromass", Samples %in% c("TrHM1","TrHM2","TrHM3") ~"High melanin necromass"))
-#############################################################################################################################################################################################
-df$Substrate<- factor(df$Substrate, levels=c("Glucose", "Low melanin necromass", "High melanin necromass"))
-#############################################################################################################################################################################################
-p <- ggplot(df, aes(Substrate, rlog, fill=Substrate))+
-geom_boxplot(width=0.5)+
-geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
-facet_wrap(~GeneID, scale="free_y")+
-theme_classic(base_size=12)+
-labs(x="", y="regularized log expression")+
-theme(legend.position='top')+
-theme(axis.text.x=element_blank())+
-theme(axis.ticks.x=element_blank())
-p
-#############################################################################################################################################################################################
-ggsave(p, file='FUNGAL_RESPONSE/Laccase_(AA1)_encoding_genes_upreg_only_RLD.png',height=3.8, width=6)
-ggsave(p, file='FUNGAL_RESPONSE/Laccase_(AA1)_encoding_genes_upreg_only_RLD.pdf',height=3.8, width=6)
-ggsave(p, file='FUNGAL_RESPONSE/Laccase_(AA1)_encoding_genes_upreg_only_RLD.tiff',height=3.8, width=6)
-savehistory('FUNGAL_RESPONSE/Laccase_AA1/Jan_26_2024.txt')
-#############################################################################################################################################################################################
-
-
-########## Supplementary Figure 3
-setwd(dir='raw_data/for_quantification_based_analyses/Reads/CHURP_reads_QCd/re_analyses')
-set.seed(1234567)
-library(ggplot2)
-library(tidyverse)
-library(scales)
-library(stringr)
-#############################################################################################################################################################################################
-df <- read.csv('FUNGAL_RESPONSE/AA11/AA11.csv')
-rld <- read.csv('normalized_transformed_counts/rld_blind_false.csv')
-rld1 <- rld %>%
-filter(rld$GeneID %in% df$GeneID)
-#############################################################################################################################################################################################
-write.csv(rld1, file='FUNGAL_RESPONSE/AA11_(AA11)_encoding_genes_upreg_only_RLD.csv')
-#############################################################################################################################################################################################
-df <- read.csv('FUNGAL_RESPONSE/AA11/AA11_(AA11)_encoding_genes_upreg_only_RLD.csv')
-#############################################################################################################################################################################################
-df <- df %>%
-pivot_longer(TRG1:TrHM3, names_to="Samples", values_to="rlog")
-#############################################################################################################################################################################################
-df <- df %>%
-mutate(Substrate = case_when(Samples %in%  c("TRG1", "TRG2", "TRG3") ~ "Glucose", Samples %in% c("LM1Tr","LM2Tr","LM3Tr") ~ "Low melanin necromass", Samples %in% c("TrHM1","TrHM2","TrHM3") ~"High melanin necromass"))
-#############################################################################################################################################################################################
-df$Substrate<- factor(df$Substrate, levels=c("Glucose", "Low melanin necromass", "High melanin necromass"))
-#############################################################################################################################################################################################
-p <- ggplot(df, aes(Substrate, rlog, fill=Substrate))+
-geom_boxplot(width=0.5)+
-geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
-facet_wrap(~GeneID, scale="free_y")+
-theme_classic(base_size=12)+
-labs(x="", y="regularized log expression")+
-theme(legend.position='top')+
-theme(axis.text.x=element_blank())+
-theme(axis.ticks.x=element_blank())
-p
-#############################################################################################################################################################################################
-ggsave(p, file='FUNGAL_RESPONSE/AA11_encoding_genes_upreg_only_RLD.png',height=3.8, width=6)
-ggsave(p, file='FUNGAL_RESPONSE/AA11_encoding_genes_upreg_only_RLD.pdf',height=3.8, width=6)
-ggsave(p, file='FUNGAL_RESPONSE/AA11_encoding_genes_upreg_only_RLD.tiff',height=3.8, width=6)
-savehistory('FUNGAL_RESPONSE/AA11/AA11_Jan_29_2024.txt')
-#############################################################################################################################################################################################
+#############################################################################################
 
 
 ######## Supplementary Figure 1
@@ -411,6 +280,81 @@ savehistory("GHs/Glucans/GH17_GH128_Supplementary_Figure/Feb_15_2024.txt")
 #############################################################################################################################################################################################
 
 
+########## Supplementary Figure 2
+sup2 <- read.csv("GHs/Glucans/GH16_Supplementary_figure/For_supplementary_Figure_2_GH16_GH30_3.csv")
+sup2 <- as.tibble(sup2)
+suprld <- rld %>%
+filter(rld$GeneID %in% sup2$proteinID)
+#############################################################################################################################################################################################
+suprld1 <- suprld %>%
+mutate(CAZyme=paste(GeneID, c('(GH16)', '(GH16)','(GH16)','(GH30_3)', '(GH16)', '(GH16)')))
+#############################################################################################################################################################################################
+suprld2 <- suprld1 %>%
+pivot_longer(TRG1:TrHM3, names_to="Samples", values_to="rlog") %>%
+mutate(Substrate = case_when(Samples %in%  c("TRG1", "TRG2", "TRG3") ~ "Glucose", Samples %in% c("LM1Tr","LM2Tr","LM3Tr") ~ "Low-melanin necromass", Samples %in% c("TrHM1","TrHM2","TrHM3") ~"High-melanin necromass"))
+suprld2$Substrate<- factor(suprld2$Substrate, levels=c("Glucose", "Low-melanin necromass", "High-melanin necromass"))
+#############################################################################################################################################################################################
+sup_p <- ggplot(suprld2, aes(Substrate, rlog, fill=Substrate))+
+geom_boxplot(width=0.5)+
+geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
+facet_wrap(~CAZyme, scale="free_y")+
+theme_classic(base_size=12)+
+labs(x="", y="regularized log expression")+
+theme(legend.position='top')+
+theme(axis.text.x=element_blank())+
+theme(axis.ticks.x=element_blank())
+sup_p
+#############################################################################################################################################################################################
+ggsave(sup_p, file='GHs/Glucans/GH16_Supplementary_figure/Sup_2.png', height=5.5, width=6, dpi=600)
+ggsave(sup_p, file='GHs/Glucans/GH16_Supplementary_figure/Sup_2.pdf', height=5.5, width=6, dpi=600)
+ggsave(sup_p, file='GHs/Glucans/GH16_Supplementary_figure/Sup_2.tiff', height=5.5, width=6, dpi=600, compression='lzw')
+savehistory("GHs/Glucans/GH16_Supplementary_figure/Feb_27_2024.txt")
+#############################################################################################################################################################################################
+
+
+########## Supplementary Figure 3
+setwd(dir='raw_data/for_quantification_based_analyses/Reads/CHURP_reads_QCd/re_analyses')
+set.seed(1234567)
+library(ggplot2)
+library(tidyverse)
+library(scales)
+library(stringr)
+#############################################################################################################################################################################################
+df <- read.csv('FUNGAL_RESPONSE/AA11/AA11.csv')
+rld <- read.csv('normalized_transformed_counts/rld_blind_false.csv')
+rld1 <- rld %>%
+filter(rld$GeneID %in% df$GeneID)
+#############################################################################################################################################################################################
+write.csv(rld1, file='FUNGAL_RESPONSE/AA11_(AA11)_encoding_genes_upreg_only_RLD.csv')
+#############################################################################################################################################################################################
+df <- read.csv('FUNGAL_RESPONSE/AA11/AA11_(AA11)_encoding_genes_upreg_only_RLD.csv')
+#############################################################################################################################################################################################
+df <- df %>%
+pivot_longer(TRG1:TrHM3, names_to="Samples", values_to="rlog")
+#############################################################################################################################################################################################
+df <- df %>%
+mutate(Substrate = case_when(Samples %in%  c("TRG1", "TRG2", "TRG3") ~ "Glucose", Samples %in% c("LM1Tr","LM2Tr","LM3Tr") ~ "Low melanin necromass", Samples %in% c("TrHM1","TrHM2","TrHM3") ~"High melanin necromass"))
+#############################################################################################################################################################################################
+df$Substrate<- factor(df$Substrate, levels=c("Glucose", "Low melanin necromass", "High melanin necromass"))
+#############################################################################################################################################################################################
+p <- ggplot(df, aes(Substrate, rlog, fill=Substrate))+
+geom_boxplot(width=0.5)+
+geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
+facet_wrap(~GeneID, scale="free_y")+
+theme_classic(base_size=12)+
+labs(x="", y="regularized log expression")+
+theme(legend.position='top')+
+theme(axis.text.x=element_blank())+
+theme(axis.ticks.x=element_blank())
+p
+#############################################################################################################################################################################################
+ggsave(p, file='FUNGAL_RESPONSE/AA11_encoding_genes_upreg_only_RLD.png',height=3.8, width=6)
+ggsave(p, file='FUNGAL_RESPONSE/AA11_encoding_genes_upreg_only_RLD.pdf',height=3.8, width=6)
+ggsave(p, file='FUNGAL_RESPONSE/AA11_encoding_genes_upreg_only_RLD.tiff',height=3.8, width=6)
+savehistory('FUNGAL_RESPONSE/AA11/AA11_Jan_29_2024.txt')
+#############################################################################################################################################################################################
+
+
 ######### Supplementary Figure 4
 setwd(dir='raw_data/for_quantification_based_analyses/Reads/CHURP_reads_QCd/re_analyses')
 set.seed(1234567)
@@ -454,33 +398,45 @@ ggsave(p, file='GHs/chitin/Supplementary_Figure_GH75_GH89/Supplementary_Fig.tiff
 #############################################################################################################################################################################################
 
 
-########## Supplementary Figure 2
-sup2 <- read.csv("GHs/Glucans/GH16_Supplementary_figure/For_supplementary_Figure_2_GH16_GH30_3.csv")
-sup2 <- as.tibble(sup2)
-suprld <- rld %>%
-filter(rld$GeneID %in% sup2$proteinID)
+
+########## Supplementary Figure 5
+setwd(dir='raw_data/for_quantification_based_analyses/Reads/CHURP_reads_QCd/re_analyses')
+set.seed(1234567)
+library(tidyverse)
+library(ggplot2)
+library(stringr)
+library(patchwork)
 #############################################################################################################################################################################################
-suprld1 <- suprld %>%
-mutate(CAZyme=paste(GeneID, c('(GH16)', '(GH16)','(GH16)','(GH30_3)', '(GH16)', '(GH16)')))
+df <- read.csv('FUNGAL_RESPONSE/Laccase_(AA1)_encoding_genes_upreg_only.csv')
+rld <- read.csv('normalized_transformed_counts/rld_blind_false.csv')
+rld1 <- rld %>%
+filter(rld$GeneID %in% df$GeneID)
 #############################################################################################################################################################################################
-suprld2 <- suprld1 %>%
-pivot_longer(TRG1:TrHM3, names_to="Samples", values_to="rlog") %>%
-mutate(Substrate = case_when(Samples %in%  c("TRG1", "TRG2", "TRG3") ~ "Glucose", Samples %in% c("LM1Tr","LM2Tr","LM3Tr") ~ "Low-melanin necromass", Samples %in% c("TrHM1","TrHM2","TrHM3") ~"High-melanin necromass"))
-suprld2$Substrate<- factor(suprld2$Substrate, levels=c("Glucose", "Low-melanin necromass", "High-melanin necromass"))
+write.csv(rld1, file='FUNGAL_RESPONSE/Laccase_(AA1)_encoding_genes_upreg_only_RLD.csv')
 #############################################################################################################################################################################################
-sup_p <- ggplot(suprld2, aes(Substrate, rlog, fill=Substrate))+
+df <- read.csv('FUNGAL_RESPONSE/Laccase_(AA1)_encoding_genes_upreg_only_RLD.csv')
+#############################################################################################################################################################################################
+df <- df %>%
+pivot_longer(TRG1:TrHM3, names_to="Samples", values_to="rlog")
+#############################################################################################################################################################################################
+df <- df %>%
+mutate(Substrate = case_when(Samples %in%  c("TRG1", "TRG2", "TRG3") ~ "Glucose", Samples %in% c("LM1Tr","LM2Tr","LM3Tr") ~ "Low melanin necromass", Samples %in% c("TrHM1","TrHM2","TrHM3") ~"High melanin necromass"))
+#############################################################################################################################################################################################
+df$Substrate<- factor(df$Substrate, levels=c("Glucose", "Low melanin necromass", "High melanin necromass"))
+#############################################################################################################################################################################################
+p <- ggplot(df, aes(Substrate, rlog, fill=Substrate))+
 geom_boxplot(width=0.5)+
 geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
-facet_wrap(~CAZyme, scale="free_y")+
+facet_wrap(~GeneID, scale="free_y")+
 theme_classic(base_size=12)+
 labs(x="", y="regularized log expression")+
 theme(legend.position='top')+
 theme(axis.text.x=element_blank())+
 theme(axis.ticks.x=element_blank())
-sup_p
+p
 #############################################################################################################################################################################################
-ggsave(sup_p, file='GHs/Glucans/GH16_Supplementary_figure/Sup_2.png', height=5.5, width=6, dpi=600)
-ggsave(sup_p, file='GHs/Glucans/GH16_Supplementary_figure/Sup_2.pdf', height=5.5, width=6, dpi=600)
-ggsave(sup_p, file='GHs/Glucans/GH16_Supplementary_figure/Sup_2.tiff', height=5.5, width=6, dpi=600, compression='lzw')
-savehistory("GHs/Glucans/GH16_Supplementary_figure/Feb_27_2024.txt")
+ggsave(p, file='FUNGAL_RESPONSE/Laccase_(AA1)_encoding_genes_upreg_only_RLD.png',height=3.8, width=6)
+ggsave(p, file='FUNGAL_RESPONSE/Laccase_(AA1)_encoding_genes_upreg_only_RLD.pdf',height=3.8, width=6)
+ggsave(p, file='FUNGAL_RESPONSE/Laccase_(AA1)_encoding_genes_upreg_only_RLD.tiff',height=3.8, width=6)
+savehistory('FUNGAL_RESPONSE/Laccase_AA1/Jan_26_2024.txt')
 #############################################################################################################################################################################################
