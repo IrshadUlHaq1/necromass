@@ -409,3 +409,78 @@ ggsave(p2, file='GHs/Glucans/Supplemntary_Fig_GH17_GH128_leg.pdf', height=6, wid
 write.table(rld3, file='GHs/Glucans/GH17_GH128_Supplementary_Fig.csv', sep=',', row.names=FALSE)
 savehistory("GHs/Glucans/GH17_GH128_Supplementary_Figure/Feb_15_2024.txt")
 #############################################################################################################################################################################################
+
+
+######### Supplementary Figure 4
+setwd(dir='raw_data/for_quantification_based_analyses/Reads/CHURP_reads_QCd/re_analyses')
+set.seed(1234567)
+library(ggplot2)
+library(scales)
+library(stringr)
+library(patchwork)
+library(tidyverse)
+#############################################################################################################################################################################################
+df <- read.csv('GHs/chitin/Down-regulated_Chitin.csv')
+df <- as.tibble(df)
+rld <- read.csv('normalized_transformed_counts/rld_blind_false.csv')
+rld <- as.tibble(rld)
+#############################################################################################################################################################################################
+rld1 <- rld %>%
+filter(rld$GeneID %in% df$proteinID)
+#############################################################################################################################################################################################
+rld2 <- rld1 %>%
+mutate(CAZyme=paste(GeneID, c('(GH18)', '(GH75)','(GH89)','(GH20)')))
+#############################################################################################################################################################################################
+rld2 <- rld2 %>%
+pivot_longer(TRG1:TrHM3, names_to="Samples", values_to="rlog") %>%
+mutate(Substrate = case_when(Samples %in%  c("TRG1", "TRG2", "TRG3") ~ "Glucose", Samples %in% c("LM1Tr","LM2Tr","LM3Tr") ~ "Low-melanin necromass", Samples %in% c("TrHM1","TrHM2","TrHM3") ~"High-melanin necromass"))
+#############################################################################################################################################################################################
+rld2$Substrate<- factor(rld2$Substrate, levels=c("Glucose", "Low-melanin necromass", "High-melanin necromass"))
+#############################################################################################################################################################################################
+p <- ggplot(rld2, aes(Substrate, rlog, fill=Substrate))+
+geom_boxplot(width=0.5)+
+geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
+facet_wrap(~CAZyme, scale="free_y")+
+theme_classic(base_size=12)+
+labs(x="", y="regularized log expression")+
+theme(legend.position='top')+
+theme(axis.text.x=element_blank())+
+theme(axis.ticks.x=element_blank())
+p
+#############################################################################################################################################################################################
+ggsave(p, file='GHs/chitin/Supplementary_Figure_GH75_GH89/Supplementary_Fig.png', height=6, width=6, dpi=600)
+ggsave(p, file='GHs/chitin/Supplementary_Figure_GH75_GH89/Supplementary_Fig.pdf', height=6, width=6, dpi=600)
+ggsave(p, file='GHs/chitin/Supplementary_Figure_GH75_GH89/Supplementary_Fig.tiff', height=6, width=6, dpi=600, compression='lzw')
+#############################################################################################################################################################################################
+
+
+########## Supplementary Figure 2
+sup2 <- read.csv("GHs/Glucans/GH16_Supplementary_figure/For_supplementary_Figure_2_GH16_GH30_3.csv")
+sup2 <- as.tibble(sup2)
+suprld <- rld %>%
+filter(rld$GeneID %in% sup2$proteinID)
+#############################################################################################################################################################################################
+suprld1 <- suprld %>%
+mutate(CAZyme=paste(GeneID, c('(GH16)', '(GH16)','(GH16)','(GH30_3)', '(GH16)', '(GH16)')))
+#############################################################################################################################################################################################
+suprld2 <- suprld1 %>%
+pivot_longer(TRG1:TrHM3, names_to="Samples", values_to="rlog") %>%
+mutate(Substrate = case_when(Samples %in%  c("TRG1", "TRG2", "TRG3") ~ "Glucose", Samples %in% c("LM1Tr","LM2Tr","LM3Tr") ~ "Low-melanin necromass", Samples %in% c("TrHM1","TrHM2","TrHM3") ~"High-melanin necromass"))
+suprld2$Substrate<- factor(suprld2$Substrate, levels=c("Glucose", "Low-melanin necromass", "High-melanin necromass"))
+#############################################################################################################################################################################################
+sup_p <- ggplot(suprld2, aes(Substrate, rlog, fill=Substrate))+
+geom_boxplot(width=0.5)+
+geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
+facet_wrap(~CAZyme, scale="free_y")+
+theme_classic(base_size=12)+
+labs(x="", y="regularized log expression")+
+theme(legend.position='top')+
+theme(axis.text.x=element_blank())+
+theme(axis.ticks.x=element_blank())
+sup_p
+#############################################################################################################################################################################################
+ggsave(sup_p, file='GHs/Glucans/GH16_Supplementary_figure/Sup_2.png', height=5.5, width=6, dpi=600)
+ggsave(sup_p, file='GHs/Glucans/GH16_Supplementary_figure/Sup_2.pdf', height=5.5, width=6, dpi=600)
+ggsave(sup_p, file='GHs/Glucans/GH16_Supplementary_figure/Sup_2.tiff', height=5.5, width=6, dpi=600, compression='lzw')
+savehistory("GHs/Glucans/GH16_Supplementary_figure/Feb_27_2024.txt")
+#############################################################################################################################################################################################
