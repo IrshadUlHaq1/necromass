@@ -100,8 +100,75 @@ theme(plot.tag=element_text(size=12, face='bold'))
 ggsave(op1, file='fig_1_LFC_2.tiff',width=8, height=6, dpi=600, compression='lzw')
 ggsave(op1, file='fig_1_LFC_2.pdf',width=8, height=6, dpi=600)
 ggsave(op1, file='fig_1_LFC_2.png',width=8, height=6, dpi=600)
-
 #############################################################################################################################################################################################
+
+
+############# Figure 3
+setwd(dir='raw_data/for_quantification_based_analyses/Reads/CHURP_reads_QCd/re_analyses')
+library(tidyverse)
+library(ggplot2)
+library(scales)
+#############################################################################################################################################################################################
+mann <- read.csv('GHs/alpha_mannan/alpha_mannan_CAZymes.csv')
+rld <- read.csv('normalized_transformed_counts/rld_blind_false.csv')
+#############################################################################################################################################################################################
+a_man <- rld %>%
+filter(rld$GeneID %in% mann$GeneID)
+write.csv(a_man, file='GHs/alpha_mannan_CAZymes_rlog.csv')
+#############################################################################################################################################################################################
+fnl <- read.csv('GHs/alpha_mannan/FINAL_alpha_mannan_HMG_LMG.csv')
+fnl_1 <- a_man %>%
+filter(a_man$GeneID %in% fnl$GeneID)
+#############################################################################################################################################################################################
+fnl_1 <- fnl_1 %>%
+pivot_longer(TRG1:TrHM3, names_to="Samples", values_to="rlog") %>%
+mutate(Substrate = case_when(Samples %in%  c("TRG1", "TRG2", "TRG3") ~ "Glucose", Samples %in% c("LM1Tr","LM2Tr","LM3Tr") ~ "Low melanin necromass", Samples %in% c("TrHM1","TrHM2","TrHM3") ~"High melanin necromass"))
+#############################################################################################################################################################################################
+fnl_2 <- fnl_1 %>%
+mutate(CAZyme=case_when(GeneID %in% '8140' ~ '8140 (GH92)'))
+fnl_2 <- fnl_2 %>%
+mutate(CAZyme=case_when(GeneID %in% '12995' ~ '12995 (GH125)'))
+fnl_2 <- fnl_2 %>%
+mutate(CAZyme=case_when(GeneID %in% '25615' ~ '25615 (GH92)'))
+fnl_2 <- fnl_2 %>%
+mutate(CAZyme=case_when(GeneID %in% '24645' ~ '24645 (GH47)'))
+fnl_2 <- fnl_2 %>%
+mutate(CAZyme=case_when(GeneID %in% '23689' ~ '23689 (GH76)'))
+fnl_2 <- fnl_2 %>%
+mutate(CAZyme=case_when(GeneID %in% '71164' ~ '71164 (GH92)'))
+fnl_2 <- fnl_2 %>%
+mutate(CAZyme=case_when(GeneID %in% '83445' ~ '83445 (GH47)'))
+fnl_2 <- fnl_2 %>%
+mutate(CAZyme=case_when(GeneID %in% '112243' ~ '112243 (GH76)'))
+fnl_2 <- fnl_2 %>%
+mutate(CAZyme=case_when(GeneID %in% '103113' ~ '103113 (GH76)'))
+fnl_2 <- fnl_2 %>%
+mutate(CAZyme=case_when(GeneID %in% '126869' ~ '126869 (GH76)'))
+fnl_2 <- fnl_2 %>%
+mutate(CAZyme=case_when(GeneID %in% '94562' ~ '94562 (GH92)'))
+fnl_2 <- fnl_2 %>%
+mutate(CAZyme=case_when(GeneID %in% '101105' ~ '101105 (GH47)'))
+#############################################################################################################################################################################################
+write.csv(fnl_2, file="GHs/alpha_mannan/FINAL_alpha_mannan_HMG_LMG_long_format.csv")
+df <- read.csv('GHs/alpha_mannan/FINAL_alpha_mannan_HMG_LMG_long_format.csv')
+df$Substrate <- factor(df$Substrate, levels=c("Glucose", "Low melanin necromass", "High melanin necromass"))
+#############################################################################################################################################################################################
+p <- ggplot(df, aes(Substrate, rlog, fill=Substrate))+
+geom_boxplot(width=0.4)+
+geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
+facet_wrap(~CAZyme, scale="free_y")+
+scale_x_discrete(labels = NULL) +
+theme_classic(base_size=12)+
+labs(x="", y="regularized log expression")+
+theme(axis.ticks.x=element_blank())+
+theme(legend.position='top')
+p
+#############################################################################################################################################################################################
+ggsave(p, file='GHs/alpha_mannan/alpha_mannan_CAZymes_rlog_common_between_LMG_HMG_FINAL.png')
+ggsave(p, file='GHs/alpha_mannan/alpha_mannan_CAZymes_rlog_common_between_LMG_HMG_FINAL.pdf')
+ggsave(p, file='GHs/alpha_mannan/alpha_mannan_CAZymes_rlog_common_between_LMG_HMG_FINAL.tiff')
+#############################################################################################################################################################################################
+
 
 ########## Figure 4 
 setwd(dir='raw_data/for_quantification_based_analyses/Reads/CHURP_reads_QCd/re_analyses')
@@ -436,71 +503,4 @@ ggsave(p, file='FUNGAL_RESPONSE/Laccase_(AA1)_encoding_genes_upreg_only_RLD.png'
 ggsave(p, file='FUNGAL_RESPONSE/Laccase_(AA1)_encoding_genes_upreg_only_RLD.pdf',height=3.8, width=6)
 ggsave(p, file='FUNGAL_RESPONSE/Laccase_(AA1)_encoding_genes_upreg_only_RLD.tiff',height=3.8, width=6)
 savehistory('FUNGAL_RESPONSE/Laccase_AA1/Jan_26_2024.txt')
-#############################################################################################################################################################################################
-
-
-############# Figure 3
-setwd(dir='raw_data/for_quantification_based_analyses/Reads/CHURP_reads_QCd/re_analyses')
-library(tidyverse)
-library(ggplot2)
-library(scales)
-#############################################################################################################################################################################################
-mann <- read.csv('GHs/alpha_mannan/alpha_mannan_CAZymes.csv')
-rld <- read.csv('normalized_transformed_counts/rld_blind_false.csv')
-#############################################################################################################################################################################################
-a_man <- rld %>%
-filter(rld$GeneID %in% mann$GeneID)
-write.csv(a_man, file='GHs/alpha_mannan_CAZymes_rlog.csv')
-#############################################################################################################################################################################################
-fnl <- read.csv('GHs/alpha_mannan/FINAL_alpha_mannan_HMG_LMG.csv')
-fnl_1 <- a_man %>%
-filter(a_man$GeneID %in% fnl$GeneID)
-#############################################################################################################################################################################################
-fnl_1 <- fnl_1 %>%
-pivot_longer(TRG1:TrHM3, names_to="Samples", values_to="rlog") %>%
-mutate(Substrate = case_when(Samples %in%  c("TRG1", "TRG2", "TRG3") ~ "Glucose", Samples %in% c("LM1Tr","LM2Tr","LM3Tr") ~ "Low melanin necromass", Samples %in% c("TrHM1","TrHM2","TrHM3") ~"High melanin necromass"))
-#############################################################################################################################################################################################
-fnl_2 <- fnl_1 %>%
-mutate(CAZyme=case_when(GeneID %in% '8140' ~ '8140 (GH92)'))
-fnl_2 <- fnl_2 %>%
-mutate(CAZyme=case_when(GeneID %in% '12995' ~ '12995 (GH125)'))
-fnl_2 <- fnl_2 %>%
-mutate(CAZyme=case_when(GeneID %in% '25615' ~ '25615 (GH92)'))
-fnl_2 <- fnl_2 %>%
-mutate(CAZyme=case_when(GeneID %in% '24645' ~ '24645 (GH47)'))
-fnl_2 <- fnl_2 %>%
-mutate(CAZyme=case_when(GeneID %in% '23689' ~ '23689 (GH76)'))
-fnl_2 <- fnl_2 %>%
-mutate(CAZyme=case_when(GeneID %in% '71164' ~ '71164 (GH92)'))
-fnl_2 <- fnl_2 %>%
-mutate(CAZyme=case_when(GeneID %in% '83445' ~ '83445 (GH47)'))
-fnl_2 <- fnl_2 %>%
-mutate(CAZyme=case_when(GeneID %in% '112243' ~ '112243 (GH76)'))
-fnl_2 <- fnl_2 %>%
-mutate(CAZyme=case_when(GeneID %in% '103113' ~ '103113 (GH76)'))
-fnl_2 <- fnl_2 %>%
-mutate(CAZyme=case_when(GeneID %in% '126869' ~ '126869 (GH76)'))
-fnl_2 <- fnl_2 %>%
-mutate(CAZyme=case_when(GeneID %in% '94562' ~ '94562 (GH92)'))
-fnl_2 <- fnl_2 %>%
-mutate(CAZyme=case_when(GeneID %in% '101105' ~ '101105 (GH47)'))
-#############################################################################################################################################################################################
-write.csv(fnl_2, file="GHs/alpha_mannan/FINAL_alpha_mannan_HMG_LMG_long_format.csv")
-df <- read.csv('GHs/alpha_mannan/FINAL_alpha_mannan_HMG_LMG_long_format.csv')
-df$Substrate <- factor(df$Substrate, levels=c("Glucose", "Low melanin necromass", "High melanin necromass"))
-#############################################################################################################################################################################################
-p <- ggplot(df, aes(Substrate, rlog, fill=Substrate))+
-geom_boxplot(width=0.4)+
-geom_jitter(position=position_jitter(w=0.05, h=0.01), size=1.5, shape=21, alpha = 2)+
-facet_wrap(~CAZyme, scale="free_y")+
-scale_x_discrete(labels = NULL) +
-theme_classic(base_size=12)+
-labs(x="", y="regularized log expression")+
-theme(axis.ticks.x=element_blank())+
-theme(legend.position='top')
-p
-#############################################################################################################################################################################################
-ggsave(p, file='GHs/alpha_mannan/alpha_mannan_CAZymes_rlog_common_between_LMG_HMG_FINAL.png')
-ggsave(p, file='GHs/alpha_mannan/alpha_mannan_CAZymes_rlog_common_between_LMG_HMG_FINAL.pdf')
-ggsave(p, file='GHs/alpha_mannan/alpha_mannan_CAZymes_rlog_common_between_LMG_HMG_FINAL.tiff')
 #############################################################################################################################################################################################
