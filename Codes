@@ -102,6 +102,67 @@ ggsave(op1, file='fig_1_LFC_2.pdf',width=8, height=6, dpi=600)
 ggsave(op1, file='fig_1_LFC_2.png',width=8, height=6, dpi=600)
 #############################################################################################################################################################################################
 
+########### Figure 2A and Figure 2B
+setwd(dir='raw_data/for_quantification_based_analyses/Reads/CHURP_reads_QCd/re_analyses')
+set.seed(1234567)
+library(ggplot2)
+library(scales)
+library(ggtext)
+library(patchwork))
+library(patchwork)
+library(stringr)
+library(tidyverse)
+#############################################################################################################################################################################################
+cat <- read.csv('FUNGAL_RESPONSE/HM_vs_LM/HM_vs_LM_HM_vs_G_LM_vs_G_Feb_21_2024.csv')
+cat <- as.tibble(cat)
+col_cat <- c("#0072B2", "#F0E442", "#009E73", "#56B4E9", "#E69F00", "#999999")
+cat$category <- factor(cat$category, levels=unique(cat$category))
+cat$treatment <- factor(cat$treatment, levels=c("Low-melanin necromass relative to glucose", "High-melanin necromass relative to glucose", "High-melanin necromass relative to low-melanin necromass"))
+cat$expression <- factor(cat$expression, levels=c('Up- regulated', 'Down- regulated'))
+#############################################################################################################################################################################################
+caz <- read.csv('FUNGAL_RESPONSE/HM_vs_LM/HM_vs_LM_HM_vs_G_LM_vs_G_ONLY_CAZYMES_Feb_26_2024.csv')
+caz <- as.tibble(caz)
+col_caz <- c("#009E73","#FFC107","#D81B60", "#1E88E5","#999999")
+caz$Carbohydrate.components <- factor(caz$Carbohydrate.components, levels=unique(caz$Carbohydrate.components))
+caz$treatment <- factor(caz$treatment, levels=c("Low-melanin necromass relative to glucose", "High-melanin necromass relative to glucose", "High-melanin necromass relative to low-melanin necromass"))
+caz$expression <- factor(caz$expression, levels=c('Up- regulated', 'Down- regulated'))
+#############################################################################################################################################################################################
+caz_p <- ggplot(caz, aes(expression, genes, fill=Carbohydrate.components))+
+geom_bar(stat='identity', color='black')+
+scale_fill_manual(values=col_caz, labels=scales::label_wrap(15))+
+scale_x_discrete(labels= scales::label_wrap(5))+
+labs(fill="Fungal cell wall <br> carbohydrates")+theme_classic(base_size=12)+
+labs(x="", y= "Fungal cell wall specific <br> CAZymes-encoding genes")+
+facet_wrap(~treatment, scale='free', labeller=labeller(treatment=label_wrap(20)))+theme(legend.title=element_markdown())+theme(axis.title.y=element_markdown())
+#############################################################################################################################################################################################
+cat_p <- ggplot(cat, aes(expression, genes, fill=category))+
+geom_bar(stat='identity', color='black')+
+scale_fill_manual(values=col_cat, labels=scales::label_wrap(20))+scale_x_discrete(labels= scales::label_wrap(5))+
+labs(fill="Functional categories")+
+theme_classic(base_size=12)+
+labs(x="", y= "Number of genes in <br> functional categories")+
+facet_wrap(~treatment, scale='free', labeller=labeller(treatment=label_wrap(20)))+theme(legend.title=element_markdown())+ theme(axis.title.y=element_markdown())
+#############################################################################################################################################################################################
+caz_p1 <- caz_p +
+theme(axis.text.x=element_text(size=8))
+#############################################################################################################################################################################################
+cat_p1 <- cat_p +
+theme(axis.text.x=element_text(size=8))
+#############################################################################################################################################################################################
+ggsave(caz_p, file='FUNGAL_RESPONSE/Test_1.png', width=8.2, height=7, dpi=600)
+ggsave(caz_p, file='FUNGAL_RESPONSE/Test_1.pdf', width=8.2, height=7, dpi=600)
+ggsave(caz_p, file='FUNGAL_RESPONSE/Test_1.tiff', width=8.2, height=7, dpi=600, compression='lzw')
+ggsave(caz_p1, file='FUNGAL_RESPONSE/Test.png', width=7.5, height=7, dpi=600)
+ggsave(caz_p1, file='FUNGAL_RESPONSE/Test.pdf', width=7.5, height=7, dpi=600)
+ggsave(caz_p1, file='FUNGAL_RESPONSE/Test.tiff', width=7.5, height=7, dpi=600, compression='lzw')
+#############################################################################################################################################################################################
+ggsave(cat_p1, file='FUNGAL_RESPONSE/Test_cat.tiff', width=7.5, height=7, dpi=600, compression='lzw')
+ggsave(cat_p1, file='FUNGAL_RESPONSE/Test_cat.pdf', width=7.5, height=7, dpi=600)
+ggsave(cat_p1, file='FUNGAL_RESPONSE/Test_cat.png', width=7.5, height=7, dpi=600)
+ggsave(cat_p, file='FUNGAL_RESPONSE/Test_cat_orig.png', width=8.2, height=7, dpi=600)
+ggsave(cat_p, file='FUNGAL_RESPONSE/Test_cat_orig.pdf', width=8.2, height=7, dpi=600)
+ggsave(cat_p, file='FUNGAL_RESPONSE/Test_cat_orig.tiff', width=8.2, height=7, dpi=600, compression='lzw')
+#############################################################################################################################################################################################
 
 ############# Figure 3
 setwd(dir='raw_data/for_quantification_based_analyses/Reads/CHURP_reads_QCd/re_analyses')
